@@ -1,0 +1,36 @@
+const emojisArr = [
+  "😂", // Tears of joy (humor)
+  "❤️", // Red heart (love)
+  "😊", // Smiling face (friendly)
+  "👍", // Thumbs up (approval)
+  "😭", // Loudly crying (sadness)
+  "😍", // Heart eyes (admiration)
+  "🙏", // Folded hands (thanks/prayer)
+  "🎉", // Party popper (celebration)
+  "😡", // Angry face (frustration)
+  "🤔", // Thinking face (contemplation)
+  "🤣", // ROFL (extreme laughter)
+  "👀", // Eyes (curiosity/attention)
+  "😎", // Cool face (confidence)
+  "🍻", // Clinking beers (cheers)
+  "👏", // Clapping hands (applause)
+  "😱", // Scream (shock/surprise)
+  "🤩", // Starstruck (excitement)
+  "😴", // Sleeping face (boredom/tired)
+  "💔", // Broken heart (heartbreak)
+  "🚀", // Rocket (success/ambition)
+  "🎂", // Birthday cake (celebrations)
+  "😜", // Winky tongue (playful)
+  "💯", // 100 (perfection/emphasis)
+  "🙈", // See-no-evil monkey (embarrassment)
+  "🌟", // Glowing star (awesome)
+  "🎯", // Bullseye (accuracy)
+  "🐶", // Dog face (cuteness/pets)
+  "🌈", // Rainbow (pride/positivity)
+  "💐", // Bouquet (congrats/kindness)
+  "🌸", // Cherry blossom (beauty/spring)
+];
+
+export const getRandomEmoji = () => {
+  return emojisArr[Math.floor(Math.random() * emojisArr.length)];
+};
