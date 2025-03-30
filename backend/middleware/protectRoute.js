@@ -16,7 +16,7 @@ const protectRoute = async (req, res, next) => {
         error: "Unauthorize - Token is Invalid",
       });
     }
-    console.log("Decoded: ", decoded);
+    // console.log("Decoded: ", decoded);
     const user = await User.findById(decoded.userId).select("-password");
     if (!user) {
       return res.status(404).json({
@@ -24,7 +24,7 @@ const protectRoute = async (req, res, next) => {
       });
     }
     req.user = user;
-    console.log("User: ", user);
+    // console.log("User: ", user);
     next();
   } catch (error) {
     console.log("error in  protectRoute middleware:  " + error.message);

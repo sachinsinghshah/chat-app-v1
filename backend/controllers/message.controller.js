@@ -1,3 +1,4 @@
+import { getReceiverSocketId, io } from "../../socket/socket.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 
@@ -33,6 +34,13 @@ export const sendMessage = async (req, res) => {
 
     //THIS  WILL SAVE BOTH PROMISES SIMULTANEOUSLY/CONCURRENTLY
     await Promise.all([conversation.save(), newMessage.save()]);
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
+
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error while Sending Message: " + error.message);

@@ -20,7 +20,7 @@ export const signup = async (req, res) => {
     // Hash Passwords here
 
     const salt = await bcrypt.genSalt(10);
-    console.log("salt: " + salt);
+    // console.log("salt: " + salt);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     //for profile-pic placeholder - https://avatar-placeholder.iran.liara.run/
