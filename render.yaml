@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: chat-app-v1-prod
+    runtime: node
+    repo: https://github.com/sachinsinghshah/chat-app-v1
+    plan: free
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: MONGO_DB_URI
+        sync: false
+      - key: PORT
+        sync: false
+    region: oregon
+    buildCommand: npm run build
+    startCommand: npm run start
+    domains:
+      - chatifyv1.8bitcode.in
+version: "1"
