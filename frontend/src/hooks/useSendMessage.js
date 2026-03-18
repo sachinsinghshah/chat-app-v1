@@ -4,20 +4,27 @@ import toast from "react-hot-toast";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation } = useConversation();
+  const { messages, setMessages, selectedConversation, replyTo, setReplyTo } =
+    useConversation();
 
   const sendMessage = async (message) => {
     setLoading(true);
-
     try {
+      const body = { message };
+      if (replyTo) {
+        body.replyTo = {
+          messageId: replyTo._id,
+          message: replyTo.message,
+          senderName: replyTo.senderName,
+        };
+      }
+
       const res = await fetch(
         `/api/messages/send/${selectedConversation._id}`,
         {
           method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({ message }),
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(body),
         }
       );
 
@@ -25,12 +32,14 @@ const useSendMessage = () => {
       if (data.error) throw new Error(data.error);
 
       setMessages([...messages, data]);
+      setReplyTo(null);
     } catch (error) {
       toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
+
   return { sendMessage, loading };
 };
 
