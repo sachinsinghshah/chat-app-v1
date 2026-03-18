@@ -3,16 +3,24 @@ import useGetMessages from "../../hooks/useGetMessages";
 import MessageSkeleton from "../skeletons/MessageSkeleton";
 import Message from "./Message";
 import useListenMessages from "../../hooks/useListenMessages";
+import TypingIndicator from "./TypingIndicator";
+import useConversation from "../../../zustand/useConversation";
 
 const Messages = () => {
   const { messages, loading } = useGetMessages();
   useListenMessages();
   const lastMessageRef = useRef();
+  const { selectedConversation, typingUsers } = useConversation();
+
+  const isOtherTyping =
+    selectedConversation && typingUsers[selectedConversation._id];
+
   useEffect(() => {
     setTimeout(() => {
-      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
-  }, [messages]);
+  }, [messages, isOtherTyping]);
+
   return (
     <div className="px-4 flex-1 overflow-auto">
       {!loading &&
@@ -22,9 +30,28 @@ const Messages = () => {
             <Message message={message} />
           </div>
         ))}
-      {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
+
+      {loading &&
+        [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
+
       {!loading && messages.length === 0 && (
-        <p className="text-center">No Chat History</p>
+        <div className="flex flex-col items-center justify-center h-full gap-2 text-gray-400">
+          <span className="text-4xl">👋</span>
+          <p className="text-sm">
+            Say hi to{" "}
+            <span className="font-semibold text-gray-300">
+              {selectedConversation?.fullName}
+            </span>
+            !
+          </p>
+        </div>
+      )}
+
+      {/* Typing indicator */}
+      {isOtherTyping && (
+        <div ref={lastMessageRef}>
+          <TypingIndicator profilePic={selectedConversation?.profilePic} />
+        </div>
       )}
     </div>
   );
