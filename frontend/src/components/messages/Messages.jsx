@@ -50,7 +50,7 @@ const Messages = () => {
       {/* Typing indicator */}
       {isOtherTyping && (
         <div ref={lastMessageRef}>
-          <TypingIndicator profilePic={selectedConversation?.profilePic} />
+          <TypingIndicator user={selectedConversation} />
         </div>
       )}
     </div>
