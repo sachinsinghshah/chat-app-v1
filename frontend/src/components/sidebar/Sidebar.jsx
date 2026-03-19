@@ -13,7 +13,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="w-72 min-w-[200px] border-r border-gray-700/60 flex flex-col bg-gray-900/60 backdrop-blur-sm">
+      <div className="w-full h-full border-r border-gray-700/60 flex flex-col bg-gray-900/60 backdrop-blur-sm">
         {/* Header */}
         <div className="px-4 pt-4 pb-2">
           <h2 className="text-lg font-bold text-white mb-3">Messages</h2>

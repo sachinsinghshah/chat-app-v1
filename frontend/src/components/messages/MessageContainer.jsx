@@ -7,6 +7,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import { useSocketContext } from "../../context/SocketContext";
 import AIChat from "./AIChat";
 import UserAvatar from "../common/UserAvatar";
+import { IoArrowBack } from "react-icons/io5";
 
 const MessageContainer = () => {
   const { selectedConversation, setSelectedConversation } = useConversation();
@@ -30,6 +31,15 @@ const MessageContainer = () => {
         <>
           {/* Chat header */}
           <div className="bg-gray-900/80 backdrop-blur-sm px-4 py-3 flex items-center gap-3 border-b border-gray-700/60">
+            {/* Back button — mobile only */}
+            <button
+              className="md:hidden text-gray-400 hover:text-white shrink-0 -ml-1 p-1"
+              onClick={() => setSelectedConversation(null)}
+              aria-label="Back"
+            >
+              <IoArrowBack size={22} />
+            </button>
+
             <div className="relative shrink-0">
               <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-indigo-500/30">
                 <UserAvatar user={selectedConversation} size={40} />
