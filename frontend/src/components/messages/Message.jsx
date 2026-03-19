@@ -5,6 +5,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import useDeleteMessage from "../../hooks/useDeleteMessage";
 import useReactToMessage from "../../hooks/useReactToMessage";
 import { BsTrash, BsReply, BsCheckAll, BsCheck } from "react-icons/bs";
+import UserAvatar from "../common/UserAvatar";
 
 const QUICK_REACTIONS = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
@@ -19,9 +20,7 @@ const Message = ({ message }) => {
   const fromMe = message.senderId === authUser._id;
   const formattedTime = extractTime(message.createdAt);
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-  const profilePic = fromMe
-    ? authUser.profilePic
-    : selectedConversation?.profilePic;
+  const avatarUser = fromMe ? authUser : selectedConversation;
 
   const shakeClass = message.shouldShake ? "shake" : "";
   const isDeleted = message.deleted;
@@ -43,8 +42,8 @@ const Message = ({ message }) => {
       }}
     >
       <div className="chat-image avatar">
-        <div className="w-10 rounded-full">
-          <img alt="avatar" src={profilePic} />
+        <div className="w-10 rounded-full overflow-hidden">
+          <UserAvatar user={avatarUser} size={40} />
         </div>
       </div>
 
