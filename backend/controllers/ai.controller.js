@@ -1,32 +1,27 @@
-import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // ─── Clients ────────────────────────────────────────────────────────────────
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-// Grok uses xAI's OpenAI-compatible endpoint
-const grok = new OpenAI({
-  apiKey: process.env.GROK_API_KEY,
-  baseURL: "https://api.x.ai/v1",
+// Groq – free tier, OpenAI-compatible API (https://console.groq.com)
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
+// HuggingFace – free Inference API, OpenAI-compatible (https://huggingface.co/settings/tokens)
+const huggingface = new OpenAI({
+  apiKey: process.env.HF_API_KEY,
+  baseURL: "https://router.huggingface.co/v1",
+});
+
+// Google Gemini – free tier (https://aistudio.google.com/apikey)
 const geminiClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // ─── Prompt Engineering ──────────────────────────────────────────────────────
-//
-// Goal: extract maximum quality from each model in a casual chat context.
-// Principles applied:
-//   1. Role + persona definition  – anchors the model's behaviour
-//   2. Response format contract   – prevents rambling / walls of text
-//   3. Explicit anti-patterns     – ban filler phrases, redundancy, over-hedging
-//   4. Chain-of-thought lite      – ask for steps only when the topic needs it
-//   5. Fallback honesty clause    – admit uncertainty rather than hallucinate
-// ─────────────────────────────────────────────────────────────────────────────
 
 const SYSTEM_PROMPTS = {
-  grok: `You are Grok, a sharp and direct AI assistant built into a chat application.
+  groq: `You are a sharp and direct AI assistant powered by Llama, built into a chat application.
 
 RESPONSE RULES — follow these strictly:
 1. Lead with the answer. Put the key point in the very first sentence.
@@ -55,7 +50,7 @@ RESPONSE RULES — follow these strictly:
 7. Tone: friendly and approachable, but efficient — like a knowledgeable friend who respects your time.
 8. Never repeat the user's question back to them.`,
 
-  claude: `You are a knowledgeable, thoughtful AI assistant in a real-time chat application, powered by Claude.
+  huggingface: `You are a knowledgeable, thoughtful AI assistant in a real-time chat application, powered by Llama.
 
 RESPONSE RULES — follow these strictly:
 1. Answer first, explain second. Don't bury the lead.
@@ -70,32 +65,15 @@ RESPONSE RULES — follow these strictly:
 
 // ─── Provider Handlers ────────────────────────────────────────────────────────
 
-async function callClaude(message, history) {
+async function callGroq(message, history) {
   const messages = [
+    { role: "system", content: SYSTEM_PROMPTS.groq },
     ...history,
     { role: "user", content: message },
   ];
 
-  const response = await anthropic.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 1024,
-    system: SYSTEM_PROMPTS.claude,
-    messages,
-  });
-
-  return response.content[0].text;
-}
-
-async function callGrok(message, history) {
-  // xAI uses the OpenAI messages format (role: user | assistant)
-  const messages = [
-    { role: "system", content: SYSTEM_PROMPTS.grok },
-    ...history,
-    { role: "user", content: message },
-  ];
-
-  const response = await grok.chat.completions.create({
-    model: "grok-3-mini",
+  const response = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
     max_tokens: 1024,
     messages,
   });
@@ -105,12 +83,11 @@ async function callGrok(message, history) {
 
 async function callGemini(message, history) {
   const model = geminiClient.getGenerativeModel({
-    model: "gemini-2.0-flash",
+    model: "gemini-2.5-flash-lite",
     systemInstruction: SYSTEM_PROMPTS.gemini,
     generationConfig: { maxOutputTokens: 1024 },
   });
 
-  // Gemini uses role "user" / "model" (not "assistant")
   const geminiHistory = history.map((msg) => ({
     role: msg.role === "assistant" ? "model" : "user",
     parts: [{ text: msg.content }],
@@ -121,11 +98,27 @@ async function callGemini(message, history) {
   return result.response.text();
 }
 
+async function callHuggingFace(message, history) {
+  const messages = [
+    { role: "system", content: SYSTEM_PROMPTS.huggingface },
+    ...history,
+    { role: "user", content: message },
+  ];
+
+  const response = await huggingface.chat.completions.create({
+    model: "meta-llama/Llama-3.1-8B-Instruct",
+    max_tokens: 1024,
+    messages,
+  });
+
+  return response.choices[0].message.content;
+}
+
 // ─── Route Handler ────────────────────────────────────────────────────────────
 
 export const aiChat = async (req, res) => {
   try {
-    const { message, conversationHistory, provider = "grok" } = req.body;
+    const { message, conversationHistory, provider = "groq" } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: "Message is required" });
@@ -135,14 +128,14 @@ export const aiChat = async (req, res) => {
     let reply;
 
     switch (provider) {
-      case "grok":
-        reply = await callGrok(message, history);
+      case "groq":
+        reply = await callGroq(message, history);
         break;
       case "gemini":
         reply = await callGemini(message, history);
         break;
-      case "claude":
-        reply = await callClaude(message, history);
+      case "huggingface":
+        reply = await callHuggingFace(message, history);
         break;
       default:
         return res.status(400).json({ error: `Unknown provider: ${provider}` });
@@ -152,12 +145,11 @@ export const aiChat = async (req, res) => {
   } catch (error) {
     console.log(`Error in AI chat (${req.body?.provider}): ${error.message}`);
 
-    // Surface friendly errors for missing API keys
     if (error.status === 401 || error.status === 403) {
       const keyName = {
-        grok: "GROK_API_KEY",
+        groq: "GROQ_API_KEY",
         gemini: "GEMINI_API_KEY",
-        claude: "ANTHROPIC_API_KEY",
+        huggingface: "HF_API_KEY",
       }[req.body?.provider] || "API key";
       return res.status(500).json({
         error: `${req.body?.provider || "AI"} service not configured — please add ${keyName} to your environment.`,

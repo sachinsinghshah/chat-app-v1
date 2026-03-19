@@ -8,9 +8,9 @@ const AI_BOT = {
 };
 
 const PROVIDER_CHIPS = [
-  { key: "grok",   label: "Grok",   color: "bg-zinc-600 text-zinc-200" },
-  { key: "gemini", label: "Gemini", color: "bg-blue-600/70 text-blue-100" },
-  { key: "claude", label: "Claude", color: "bg-purple-600/70 text-purple-100" },
+  { key: "groq",        label: "Groq",    color: "bg-orange-600/70 text-orange-100" },
+  { key: "gemini",      label: "Gemini",  color: "bg-blue-600/70 text-blue-100" },
+  { key: "huggingface", label: "Llama", color: "bg-yellow-600/70 text-yellow-100" },
 ];
 
 const AIBotEntry = () => {
@@ -34,9 +34,9 @@ const AIBotEntry = () => {
       <div className="flex gap-2 items-center">
         {/* Stacked provider avatars */}
         <div className="flex items-center shrink-0 w-12 h-12 relative">
-          <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-white text-xs font-bold absolute left-0 z-30 ring-2 ring-gray-900">𝕏</div>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white text-xs font-bold absolute left-0 z-30 ring-2 ring-gray-900">⚡</div>
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold absolute left-3 z-20 ring-2 ring-gray-900">✦</div>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold absolute left-6 z-10 ring-2 ring-gray-900">◆</div>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center text-white text-xs font-bold absolute left-6 z-10 ring-2 ring-gray-900">🤗</div>
         </div>
 
         <div className="flex flex-col flex-1 min-w-0">

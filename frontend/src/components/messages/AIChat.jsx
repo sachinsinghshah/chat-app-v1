@@ -13,21 +13,21 @@ const EMOJI_LIST = [
 
 // ── Provider config ────────────────────────────────────────────────────────
 const PROVIDERS = {
-  grok: {
-    label: "Grok",
-    subLabel: "xAI · Grok-3 Mini",
-    avatar: "𝕏",
-    headerGrad: "from-gray-900/90 to-zinc-800/90",
-    headerBorder: "border-zinc-600/40",
-    badge: "bg-zinc-700 text-zinc-200",
-    subText: "text-zinc-400",
-    bubbleBg: "bg-zinc-700",
-    tabActive: "bg-zinc-700 text-white",
-    tabInactive: "text-zinc-400 hover:text-zinc-200",
-    avatarBg: "bg-zinc-700",
-    dotColor: "bg-zinc-400",
-    inputBorder: "border-zinc-600/50 focus-within:border-zinc-400",
-    sendBtn: "text-zinc-400 hover:text-zinc-200",
+  groq: {
+    label: "Groq",
+    subLabel: "Llama 3.3 70B · Free",
+    avatar: "⚡",
+    headerGrad: "from-orange-900/80 to-amber-900/80",
+    headerBorder: "border-orange-700/40",
+    badge: "bg-orange-700/60 text-orange-200",
+    subText: "text-orange-300",
+    bubbleBg: "bg-orange-700",
+    tabActive: "bg-orange-600 text-white",
+    tabInactive: "text-orange-400 hover:text-orange-200",
+    avatarBg: "bg-gradient-to-br from-orange-500 to-amber-500",
+    dotColor: "bg-orange-300",
+    inputBorder: "border-orange-700/50 focus-within:border-orange-400",
+    sendBtn: "text-orange-400 hover:text-orange-200",
     suggestions: [
       "What's trending in tech today?",
       "Explain recursion simply",
@@ -37,7 +37,7 @@ const PROVIDERS = {
   },
   gemini: {
     label: "Gemini",
-    subLabel: "Google · Gemini 2.0 Flash",
+    subLabel: "Google · Gemini 2.5 Flash Lite · Free",
     avatar: "✦",
     headerGrad: "from-blue-900/80 to-cyan-900/80",
     headerBorder: "border-blue-700/40",
@@ -57,21 +57,21 @@ const PROVIDERS = {
       "Summarise the news for me",
     ],
   },
-  claude: {
-    label: "Claude",
-    subLabel: "Anthropic · Claude Haiku",
-    avatar: "◆",
-    headerGrad: "from-purple-900/80 to-indigo-900/80",
-    headerBorder: "border-purple-700/50",
-    badge: "bg-purple-600/60 text-purple-200",
-    subText: "text-purple-300",
-    bubbleBg: "bg-purple-700",
-    tabActive: "bg-purple-600 text-white",
-    tabInactive: "text-purple-400 hover:text-purple-200",
-    avatarBg: "bg-gradient-to-br from-purple-500 to-indigo-600",
-    dotColor: "bg-purple-300",
-    inputBorder: "border-purple-700/50 focus-within:border-purple-500",
-    sendBtn: "text-purple-400 hover:text-purple-300",
+  huggingface: {
+    label: "Llama",
+    subLabel: "HuggingFace · Llama 3.1 8B · Free",
+    avatar: "🤗",
+    headerGrad: "from-yellow-900/80 to-amber-900/80",
+    headerBorder: "border-yellow-700/50",
+    badge: "bg-yellow-700/60 text-yellow-200",
+    subText: "text-yellow-300",
+    bubbleBg: "bg-yellow-700",
+    tabActive: "bg-yellow-600 text-white",
+    tabInactive: "text-yellow-400 hover:text-yellow-200",
+    avatarBg: "bg-gradient-to-br from-yellow-500 to-amber-600",
+    dotColor: "bg-yellow-300",
+    inputBorder: "border-yellow-700/50 focus-within:border-yellow-500",
+    sendBtn: "text-yellow-400 hover:text-yellow-300",
     suggestions: [
       "Write a short poem",
       "Explain async/await",
@@ -90,7 +90,7 @@ const AIChat = () => {
   const { setAiMessages, selectedAIProvider, setAIProvider } = useConversation();
   const bottomRef = useRef();
 
-  const cfg = PROVIDERS[selectedAIProvider] || PROVIDERS.grok;
+  const cfg = PROVIDERS[selectedAIProvider] || PROVIDERS.groq;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
