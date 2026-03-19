@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { IoSend } from "react-icons/io5";
+import { IoSend, IoArrowBack } from "react-icons/io5";
 import { BsEmojiSmile } from "react-icons/bs";
 import useAIChat from "../../hooks/useAIChat";
 import useConversation from "../../../zustand/useConversation";
@@ -88,7 +88,7 @@ const AIChat = () => {
   const [showEmoji, setShowEmoji] = useState(false);
   const { sendToAI, loading, aiMessages } = useAIChat();
   const { authUser } = useAuthContext();
-  const { setAiMessages, selectedAIProvider, setAIProvider } = useConversation();
+  const { setAiMessages, selectedAIProvider, setAIProvider, setSelectedConversation } = useConversation();
   const bottomRef = useRef();
 
   const cfg = PROVIDERS[selectedAIProvider] || PROVIDERS.groq;
@@ -112,6 +112,15 @@ const AIChat = () => {
       <div
         className={`bg-gradient-to-r ${cfg.headerGrad} backdrop-blur-sm px-4 py-3 border-b ${cfg.headerBorder}`}
       >
+        {/* Back button — mobile only */}
+        <button
+          className="md:hidden flex items-center gap-1 text-gray-300 hover:text-white mb-2 -ml-1 p-1 text-sm"
+          onClick={() => setSelectedConversation(null)}
+          aria-label="Back"
+        >
+          <IoArrowBack size={20} />
+        </button>
+
         {/* Model selector tabs */}
         <div className="flex gap-1 mb-3 bg-black/20 rounded-lg p-1">
           {Object.entries(PROVIDERS).map(([key, p]) => (
