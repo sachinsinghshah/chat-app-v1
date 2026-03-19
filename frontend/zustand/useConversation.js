@@ -19,12 +19,12 @@ const useConversation = create((set, get) => ({
   setReplyTo: (replyTo) => set({ replyTo }),
 
   // ── AI state ───────────────────────────────────────────────
-  // Active provider: "grok" | "gemini" | "claude"
-  selectedAIProvider: "grok",
+  // Active provider: "groq" | "gemini" | "huggingface"
+  selectedAIProvider: "groq",
   setAIProvider: (provider) => set({ selectedAIProvider: provider }),
 
   // Per-provider conversation history
-  aiMessagesByProvider: { grok: [], gemini: [], claude: [] },
+  aiMessagesByProvider: { groq: [], gemini: [], huggingface: [] },
 
   // Returns messages for the active provider
   get aiMessages() {

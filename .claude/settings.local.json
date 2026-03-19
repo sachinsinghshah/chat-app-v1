@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm uninstall:*)",
+      "WebFetch(domain:ai.google.dev)",
+      "WebFetch(domain:awesomeagents.ai)"
+    ]
+  }
+}
