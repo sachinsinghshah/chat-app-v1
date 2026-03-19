@@ -9,7 +9,7 @@ import { useAuthContext } from "./context/AuthContext";
 function App() {
   const { authUser } = useAuthContext();
   return (
-    <div className="p-4 h-screen flex items-center justify-center">
+    <div className="h-screen flex flex-col">
       <Routes>
         <Route
           path="/"
@@ -17,14 +17,39 @@ function App() {
         />
         <Route
           path="/login"
-          element={authUser ? <Navigate to="/" /> : <Login />}
+          element={
+            authUser ? (
+              <Navigate to="/" />
+            ) : (
+              <div className="flex-1 flex items-center justify-center p-4 h-screen">
+                <Login />
+              </div>
+            )
+          }
         />
         <Route
           path="/signup"
-          element={authUser ? <Navigate to="/" /> : <SignUp />}
+          element={
+            authUser ? (
+              <Navigate to="/" />
+            ) : (
+              <div className="flex-1 flex items-center justify-center p-4 h-screen overflow-y-auto">
+                <SignUp />
+              </div>
+            )
+          }
         />
       </Routes>
-      <Toaster />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1f2937",
+            color: "#f9fafb",
+            border: "1px solid #374151",
+          },
+        }}
+      />
     </div>
   );
 }

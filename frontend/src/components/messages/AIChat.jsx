@@ -5,6 +5,7 @@ import useAIChat from "../../hooks/useAIChat";
 import useConversation from "../../../zustand/useConversation";
 import { useAuthContext } from "../../context/AuthContext";
 import { extractTime } from "../../../../backend/utils/exactTime";
+import UserAvatar from "../common/UserAvatar";
 
 const EMOJI_LIST = [
   "😀","😂","😍","🥰","😎","🤔","😮","😢","😡","🥳",
@@ -189,7 +190,7 @@ const AIChat = () => {
               <div className="chat-image avatar">
                 <div className="w-9 rounded-full overflow-hidden">
                   {isUser ? (
-                    <img src={authUser.profilePic} alt="you" />
+                    <UserAvatar user={authUser} size={36} />
                   ) : (
                     <div
                       className={`w-9 h-9 ${cfg.avatarBg} flex items-center justify-center text-white font-bold text-sm`}
