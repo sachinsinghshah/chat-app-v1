@@ -4,7 +4,7 @@ import { BsEmojiSmile } from "react-icons/bs";
 import useAIChat from "../../hooks/useAIChat";
 import useConversation from "../../../zustand/useConversation";
 import { useAuthContext } from "../../context/AuthContext";
-import { extractTime } from "../../../../backend/utils/exactTime";
+import { extractTime } from "../../utils/extractTime";
 import UserAvatar from "../common/UserAvatar";
 
 const EMOJI_LIST = [

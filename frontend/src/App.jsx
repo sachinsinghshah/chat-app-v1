@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { useAuthContext } from "./context/AuthContext";
 
 // Apply saved theme before first render
-const savedTheme = localStorage.getItem("chat-theme") || "dark";
+const savedTheme = localStorage.getItem("chatify-theme") || "dark";
 document.documentElement.setAttribute("data-theme", savedTheme);
 
 function App() {
