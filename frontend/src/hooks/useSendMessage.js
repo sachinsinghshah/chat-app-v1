@@ -7,10 +7,10 @@ const useSendMessage = () => {
   const { messages, setMessages, selectedConversation, replyTo, setReplyTo } =
     useConversation();
 
-  const sendMessage = async (message) => {
+  const sendMessage = async (message, messageType = "text") => {
     setLoading(true);
     try {
-      const body = { message };
+      const body = { message, messageType };
       if (replyTo) {
         body.replyTo = {
           messageId: replyTo._id,
