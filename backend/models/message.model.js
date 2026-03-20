@@ -15,34 +15,32 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    // null for group messages
     receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      default: null,
+    },
+    // set for group messages
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group",
+      default: null,
     },
     message: {
       type: String,
       required: true,
     },
-    // Read receipt
-    read: {
-      type: Boolean,
-      default: false,
-    },
-    // Soft delete
-    deleted: {
-      type: Boolean,
-      default: false,
-    },
-    // Emoji reactions
+    read: { type: Boolean, default: false },
+    deleted: { type: Boolean, default: false },
+    edited: { type: Boolean, default: false },
+    editedAt: { type: Date },
     reactions: [reactionSchema],
-    // Reply-to reference
     replyTo: {
       messageId: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
       message: { type: String },
       senderName: { type: String },
     },
-    // Message type: text | image
     messageType: {
       type: String,
       enum: ["text", "image"],
@@ -55,3 +53,4 @@ const messageSchema = new mongoose.Schema(
 const Message = mongoose.model("Message", messageSchema);
 
 export default Message;
+
