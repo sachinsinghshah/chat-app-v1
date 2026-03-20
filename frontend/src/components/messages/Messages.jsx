@@ -40,7 +40,7 @@ const Messages = () => {
           <p className="text-sm">
             Say hi to{" "}
             <span className="font-semibold text-gray-300">
-              {selectedConversation?.fullName}
+              {selectedConversation?.fullName || selectedConversation?.name}
             </span>
             !
           </p>

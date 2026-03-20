@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
 import useConversation from "../../../zustand/useConversation";
-import { extractTime } from "../../../../backend/utils/exactTime";
+import { extractTime } from "../../utils/extractTime";
 
 const MessageSearch = ({ onClose }) => {
   const [query, setQuery] = useState("");
@@ -33,7 +33,9 @@ const MessageSearch = ({ onClose }) => {
 
   const highlight = (text, q) => {
     if (!q.trim()) return text;
-    const parts = text.split(new RegExp(`(${q.trim()})`, "gi"));
+    // Escape regex special characters so user input doesn't break the pattern
+    const escaped = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const parts = text.split(new RegExp(`(${escaped})`, "gi"));
     return parts.map((part, i) =>
       part.toLowerCase() === q.trim().toLowerCase() ? (
         <mark key={i} className="bg-indigo-500/40 text-white rounded px-0.5">

@@ -9,6 +9,7 @@ import GroupConversation from "./GroupConversation";
 import { useAuthContext } from "../../context/AuthContext";
 import useConversation from "../../../zustand/useConversation";
 import useGetGroups from "../../hooks/useGetGroups";
+import useGetBlockedUsers from "../../hooks/useGetBlockedUsers";
 import { FiSettings, FiSun, FiMoon, FiUsers, FiPlus } from "react-icons/fi";
 
 const Sidebar = () => {
@@ -17,6 +18,7 @@ const Sidebar = () => {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const { theme, setTheme } = useConversation();
   const { groups } = useGetGroups();
+  useGetBlockedUsers();
 
   return (
     <>

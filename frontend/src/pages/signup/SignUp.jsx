@@ -103,17 +103,28 @@ const SignUp = () => {
             </label>
             <div className="relative">
               <FiLock
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                className={`absolute left-3 top-1/2 -translate-y-1/2 ${
+                  inputs.confirmPassword && inputs.password !== inputs.confirmPassword
+                    ? "text-red-400"
+                    : "text-gray-400"
+                }`}
                 size={16}
               />
               <input
                 type="password"
                 placeholder="Confirm your password"
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl pl-9 pr-4 py-2.5 text-white text-sm placeholder-gray-500 outline-none focus:border-indigo-500 transition-colors"
+                className={`w-full bg-gray-800 border rounded-xl pl-9 pr-4 py-2.5 text-white text-sm placeholder-gray-500 outline-none transition-colors ${
+                  inputs.confirmPassword && inputs.password !== inputs.confirmPassword
+                    ? "border-red-500 focus:border-red-400"
+                    : "border-gray-700 focus:border-indigo-500"
+                }`}
                 value={inputs.confirmPassword}
                 onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })}
                 autoComplete="new-password"
               />
+              {inputs.confirmPassword && inputs.password !== inputs.confirmPassword && (
+                <p className="text-red-400 text-xs mt-1">Passwords don&apos;t match</p>
+              )}
             </div>
           </div>
 

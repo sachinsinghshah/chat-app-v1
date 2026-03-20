@@ -1,22 +1,19 @@
 import OpenAI from "openai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// ─── Clients ────────────────────────────────────────────────────────────────
+// ─── Lazy Clients (created on first use to avoid startup crash) ──────────────
 
-// Groq – free tier, OpenAI-compatible API (https://console.groq.com)
-const groq = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
+const getGroq = () => new OpenAI({
+  apiKey: process.env.GROQ_API_KEY || "missing",
   baseURL: "https://api.groq.com/openai/v1",
 });
 
-// HuggingFace – free Inference API, OpenAI-compatible (https://huggingface.co/settings/tokens)
-const huggingface = new OpenAI({
-  apiKey: process.env.HF_API_KEY,
+const getHuggingFace = () => new OpenAI({
+  apiKey: process.env.HF_API_KEY || "missing",
   baseURL: "https://router.huggingface.co/v1",
 });
 
-// Google Gemini – free tier (https://aistudio.google.com/apikey)
-const geminiClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const getGemini = () => new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "missing");
 
 // ─── Prompt Engineering ──────────────────────────────────────────────────────
 
@@ -72,7 +69,7 @@ async function callGroq(message, history) {
     { role: "user", content: message },
   ];
 
-  const response = await groq.chat.completions.create({
+  const response = await getGroq().chat.completions.create({
     model: "llama-3.3-70b-versatile",
     max_tokens: 1024,
     messages,
@@ -82,7 +79,7 @@ async function callGroq(message, history) {
 }
 
 async function callGemini(message, history) {
-  const model = geminiClient.getGenerativeModel({
+  const model = getGemini().getGenerativeModel({
     model: "gemini-2.5-flash-lite",
     systemInstruction: SYSTEM_PROMPTS.gemini,
     generationConfig: { maxOutputTokens: 1024 },
@@ -105,7 +102,7 @@ async function callHuggingFace(message, history) {
     { role: "user", content: message },
   ];
 
-  const response = await huggingface.chat.completions.create({
+  const response = await getHuggingFace().chat.completions.create({
     model: "meta-llama/Llama-3.1-8B-Instruct",
     max_tokens: 1024,
     messages,
