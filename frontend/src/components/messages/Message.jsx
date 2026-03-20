@@ -62,7 +62,7 @@ const Message = ({ message }) => {
   return (
     <>
       <div
-        className={`chat ${chatClassName} group relative`}
+        className={`chat ${chatClassName} group relative w-full min-w-0 max-w-full`}
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => {
           setShowActions(false);
@@ -127,7 +127,7 @@ const Message = ({ message }) => {
               <img
                 src={message.message}
                 alt="shared"
-                className="max-w-[240px] max-h-[320px] w-full rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                className="max-w-[180px] sm:max-w-[240px] max-h-[280px] w-full rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => setLightbox(true)}
               />
             ) : (
