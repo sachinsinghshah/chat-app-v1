@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="w-full h-full border-r border-gray-700/60 flex flex-col bg-gray-900/60 backdrop-blur-sm">
+      <div className="w-full h-full border-r border-gray-700/60 flex flex-col bg-gray-900/60 backdrop-blur-sm transition-colors duration-200">
         {/* Header */}
         <div className="px-4 pt-4 pb-2">
           <div className="flex items-center justify-between mb-3">

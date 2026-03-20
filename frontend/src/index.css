@@ -11,36 +11,18 @@ body {
 }
 
 [data-theme="light"] body {
-  background: linear-gradient(135deg, #e8eaf6 0%, #ede9fe 50%, #f0f4ff 100%);
+  background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 50%, #f0f9ff 100%);
 }
 
 /* ── Scrollbars ─────────────────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 99px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
-}
-[data-theme="light"] ::-webkit-scrollbar-thumb {
-  background: #c4c9d4;
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #374151; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #cbd5e1; }
 
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #374151 transparent;
-}
-[data-theme="light"] * {
-  scrollbar-color: #c4c9d4 transparent;
-}
+* { scrollbar-width: thin; scrollbar-color: #374151 transparent; }
+[data-theme="light"] * { scrollbar-color: #cbd5e1 transparent; }
 
 /* ── SHAKE ANIMATION ────────────────────────────────────────────────────── */
 .shake {
@@ -49,7 +31,6 @@ body {
   backface-visibility: hidden;
   perspective: 1000px;
 }
-
 @keyframes shake {
   10%, 90% { transform: translate3d(-1px, 0, 0); }
   20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -64,18 +45,172 @@ button, a, input {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Light mode overrides for core UI shells ────────────────────────────── */
-[data-theme="light"] .sidebar-shell {
-  background: rgba(255,255,255,0.85) !important;
-  border-color: rgba(0,0,0,0.08) !important;
+/* ════════════════════════════════════════════════════════════════════════════
+   LIGHT THEME — comprehensive overrides
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Sidebar (bg-gray-900/60) ────────────────────────────────────────────── */
+[data-theme="light"] .bg-gray-900\/60 {
+  background: #ffffff !important;
+  box-shadow: 2px 0 12px rgba(99, 102, 241, 0.06) !important;
 }
 
-[data-theme="light"] .chat-header-shell {
-  background: rgba(255,255,255,0.85) !important;
-  border-color: rgba(0,0,0,0.08) !important;
+/* ── Chat header (bg-gray-900/80) ────────────────────────────────────────── */
+[data-theme="light"] .bg-gray-900\/80 {
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08) !important;
 }
 
-/* ── Ensure chat bubbles stay readable in light mode ─────────────────────── */
-[data-theme="light"] .chat-bubble {
-  color: white;
+/* ── Empty state / no-chat background ───────────────────────────────────── */
+[data-theme="light"] .bg-gray-900\/20 {
+  background: rgba(239, 242, 255, 0.5) !important;
+}
+
+/* ── gray-800 surfaces (search input, dropdowns, emoji picker, action btns) */
+[data-theme="light"] .bg-gray-800 {
+  background: #f1f5f9 !important;
+}
+[data-theme="light"] .bg-gray-800\/60 {
+  background: rgba(248, 250, 252, 0.95) !important;
+}
+[data-theme="light"] .bg-gray-800\/50 {
+  background: rgba(241, 245, 249, 0.8) !important;
+}
+
+/* ── gray-700 surfaces (message input form, reply preview) ──────────────── */
+[data-theme="light"] .bg-gray-700 {
+  background: #ffffff !important;
+}
+[data-theme="light"] .bg-gray-700\/60 {
+  background: rgba(241, 245, 249, 0.9) !important;
+}
+[data-theme="light"] .bg-gray-700\/40 {
+  background: rgba(241, 245, 249, 0.7) !important;
+}
+[data-theme="light"] .bg-gray-700\/30 {
+  background: rgba(241, 245, 249, 0.5) !important;
+}
+
+/* ── Dividers (bg-gray-700/50) ───────────────────────────────────────────── */
+[data-theme="light"] .bg-gray-700\/50 {
+  background: rgba(148, 163, 184, 0.2) !important;
+}
+
+/* ── Borders ─────────────────────────────────────────────────────────────── */
+[data-theme="light"] .border-gray-700\/60 {
+  border-color: rgba(148, 163, 184, 0.25) !important;
+}
+[data-theme="light"] .border-gray-700\/50 {
+  border-color: rgba(148, 163, 184, 0.2) !important;
+}
+[data-theme="light"] .border-gray-700 {
+  border-color: #e2e8f0 !important;
+}
+[data-theme="light"] .border-gray-600 {
+  border-color: #cbd5e1 !important;
+}
+/* Online indicator border — match parent bg */
+[data-theme="light"] .border-gray-900 {
+  border-color: #ffffff !important;
+}
+
+/* ── Text colors ─────────────────────────────────────────────────────────── */
+[data-theme="light"] .text-white {
+  color: #0f172a !important;
+}
+[data-theme="light"] .text-gray-100 {
+  color: #1e293b !important;
+}
+[data-theme="light"] .text-gray-300 {
+  color: #475569 !important;
+}
+[data-theme="light"] .text-gray-400 {
+  color: #64748b !important;
+}
+[data-theme="light"] .text-gray-500 {
+  color: #94a3b8 !important;
+}
+[data-theme="light"] .placeholder-gray-400::placeholder,
+[data-theme="light"] .placeholder-gray-500::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* ── Hover states ─────────────────────────────────────────────────────────── */
+[data-theme="light"] .hover\:bg-gray-700\/40:hover {
+  background: rgba(99, 102, 241, 0.07) !important;
+}
+[data-theme="light"] .hover\:bg-gray-700\/30:hover {
+  background: rgba(241, 245, 249, 0.6) !important;
+}
+[data-theme="light"] .hover\:bg-gray-700\/50:hover {
+  background: rgba(241, 245, 249, 0.8) !important;
+}
+[data-theme="light"] .hover\:bg-gray-800\/60:hover {
+  background: rgba(241, 245, 249, 0.9) !important;
+}
+[data-theme="light"] .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* ── Chat message bubbles ─────────────────────────────────────────────────── */
+/* Sent messages → keep vivid blue, white text */
+[data-theme="light"] .chat-bubble.bg-blue-500 {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+}
+/* Received messages → clean slate card with dark text */
+[data-theme="light"] .chat-bubble.bg-purple-600 {
+  background: #e8edf2 !important;
+  color: #1e293b !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+}
+/* Deleted messages */
+[data-theme="light"] .chat-bubble.bg-gray-600 {
+  background: #e8edf2 !important;
+  color: #94a3b8 !important;
+}
+
+/* ── Message action bar (emoji/reply/edit/delete) ────────────────────────── */
+[data-theme="light"] .bg-gray-800.rounded-full {
+  background: #ffffff !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ── Dropdown menu ───────────────────────────────────────────────────────── */
+[data-theme="light"] .bg-gray-800.rounded-xl {
+  background: #ffffff !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ── No-chat empty state card ────────────────────────────────────────────── */
+[data-theme="light"] .bg-gray-800\/50.rounded-full {
+  background: rgba(241, 245, 249, 0.9) !important;
+}
+
+/* ── focus-within border ─────────────────────────────────────────────────── */
+[data-theme="light"] .focus-within\:border-blue-500:focus-within {
+  border-color: #6366f1 !important;
+}
+
+/* ── Additional text colors ──────────────────────────────────────────────── */
+[data-theme="light"] .text-gray-200 {
+  color: #1e293b !important;
+}
+
+/* ── AI Bot avatar ring (ring-gray-900 → white in light) ─────────────────── */
+[data-theme="light"] .ring-gray-900 {
+  --tw-ring-color: #ffffff !important;
+}
+
+/* ── Group selected state ────────────────────────────────────────────────── */
+[data-theme="light"] .bg-purple-600\/30 {
+  background: rgba(139, 92, 246, 0.1) !important;
+}
+
+/* ── AI bot selected (bg-gray-700/50) ────────────────────────────────────── */
+/* Already covered by bg-gray-700\/50 override above */
+
+/* ── Smooth theme transition on key containers ───────────────────────────── */
+[data-theme="light"] .backdrop-blur-sm {
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
