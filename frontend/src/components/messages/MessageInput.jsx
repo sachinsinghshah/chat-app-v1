@@ -135,11 +135,11 @@ const MessageInput = () => {
 
       {/* Image preview */}
       {imagePreview && (
-        <div className="relative inline-block mb-2">
+        <div className="relative inline-block mb-2 max-w-[200px]">
           <img
             src={imagePreview}
             alt="preview"
-            className="h-24 rounded-xl object-cover border border-gray-600"
+            className="h-24 max-w-[200px] w-auto rounded-xl object-cover border border-gray-600"
           />
           <button
             onClick={() => setImagePreview(null)}

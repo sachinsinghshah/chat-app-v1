@@ -127,7 +127,7 @@ const Message = ({ message }) => {
               <img
                 src={message.message}
                 alt="shared"
-                className="max-w-[240px] max-h-[320px] rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                className="max-w-[240px] max-h-[320px] w-full rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => setLightbox(true)}
               />
             ) : (
