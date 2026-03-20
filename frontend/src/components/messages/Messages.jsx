@@ -26,7 +26,7 @@ const Messages = () => {
       {!loading &&
         messages.length > 0 &&
         messages.map((message) => (
-          <div key={message._id} ref={lastMessageRef}>
+          <div key={message._id} ref={lastMessageRef} className="w-full min-w-0">
             <Message message={message} />
           </div>
         ))}
