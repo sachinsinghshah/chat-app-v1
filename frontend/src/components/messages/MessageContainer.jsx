@@ -47,7 +47,7 @@ const MessageContainer = () => {
       ) : (
         <>
           {/* Chat header */}
-          <div className="bg-gray-900/80 backdrop-blur-sm px-4 py-3 flex items-center gap-3 border-b border-gray-700/60 relative">
+          <div className="bg-gray-900/80 backdrop-blur-sm px-4 py-3 flex items-center gap-3 border-b border-gray-700/60 relative transition-colors duration-200">
             {/* Back button — mobile only */}
             <button
               className="md:hidden text-gray-400 hover:text-white shrink-0 -ml-1 p-1"
