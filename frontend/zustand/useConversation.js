@@ -94,6 +94,14 @@ const useConversation = create((set, get) => ({
     set({ theme });
   },
 
+  // ── Suggested replies ────────────────────────────────────────────────────
+  suggestedReplies: [],
+  setSuggestedReplies: (replies) => set({ suggestedReplies: replies }),
+
+  // ── AI context bridge ("Ask AI About This") ──────────────────────────────
+  aiContextMessage: null,
+  setAiContextMessage: (msg) => set({ aiContextMessage: msg }),
+
   // ── AI ───────────────────────────────────────────────────────────────────
   selectedAIProvider: "groq",
   setAIProvider: (provider) => set({ selectedAIProvider: provider }),

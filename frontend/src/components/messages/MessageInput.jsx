@@ -5,6 +5,7 @@ import { BsReply } from "react-icons/bs";
 import useSendMessage from "../../hooks/useSendMessage";
 import useConversation from "../../../zustand/useConversation";
 import { useSocketContext } from "../../context/SocketContext";
+import SuggestedReplies from "./SuggestedReplies";
 import toast from "react-hot-toast";
 
 const EMOJI_LIST = [
@@ -45,7 +46,7 @@ const MessageInput = () => {
   const [imagePreview, setImagePreview] = useState(null); // base64 string
   const [imageLoading, setImageLoading] = useState(false);
   const { loading, sendMessage } = useSendMessage();
-  const { replyTo, setReplyTo, selectedConversation } = useConversation();
+  const { replyTo, setReplyTo, selectedConversation, setSuggestedReplies } = useConversation();
   const { socket } = useSocketContext();
   const typingTimeoutRef = useRef(null);
   const isTypingRef = useRef(false);
@@ -66,6 +67,7 @@ const MessageInput = () => {
 
   const handleChange = (e) => {
     setMessage(e.target.value);
+    setSuggestedReplies([]); // dismiss suggestions when user starts typing
     emitTyping();
   };
 
@@ -104,6 +106,7 @@ const MessageInput = () => {
       await sendMessage(message.trim());
       setMessage("");
     }
+    setSuggestedReplies([]);
     setShowEmojiPicker(false);
   };
 
@@ -148,6 +151,11 @@ const MessageInput = () => {
             <IoClose size={14} />
           </button>
         </div>
+      )}
+
+      {/* Smart reply suggestions */}
+      {!imagePreview && (
+        <SuggestedReplies onSelect={(reply) => setMessage(reply)} />
       )}
 
       {/* Emoji picker */}
