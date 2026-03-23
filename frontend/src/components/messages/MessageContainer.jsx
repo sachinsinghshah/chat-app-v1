@@ -7,9 +7,10 @@ import { TbMessages, TbRobot } from "react-icons/tb";
 import { useAuthContext } from "../../context/AuthContext";
 import { useSocketContext } from "../../context/SocketContext";
 import AIChat from "./AIChat";
+import ChatSummaryPanel from "./ChatSummaryPanel";
 import UserAvatar from "../common/UserAvatar";
 import { IoArrowBack } from "react-icons/io5";
-import { FiSearch, FiMoreVertical, FiUserX, FiUserCheck } from "react-icons/fi";
+import { FiSearch, FiMoreVertical, FiUserX, FiUserCheck, FiZap } from "react-icons/fi";
 import { FiUsers, FiLogOut } from "react-icons/fi";
 import useBlockUser from "../../hooks/useBlockUser";
 import Avatar from "boring-avatars";
@@ -18,15 +19,17 @@ import toast from "react-hot-toast";
 const PALETTE = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"];
 
 const MessageContainer = () => {
-  const { selectedConversation, setSelectedConversation } = useConversation();
+  const { selectedConversation, setSelectedConversation, messages } = useConversation();
   const { onlineUsers } = useSocketContext();
   const [showSearch, setShowSearch] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   // Reset state when conversation changes
   useEffect(() => {
     setShowSearch(false);
     setShowMenu(false);
+    setShowSummary(false);
   }, [selectedConversation?._id]);
 
   useEffect(() => {
@@ -96,8 +99,17 @@ const MessageContainer = () => {
 
             {/* Right actions */}
             <div className="flex items-center gap-1 shrink-0">
+              {messages.length >= 10 && (
+                <button
+                  onClick={() => { setShowSummary((p) => !p); setShowMenu(false); setShowSearch(false); }}
+                  className={`p-1.5 rounded-full transition-colors ${showSummary ? "text-yellow-400 bg-yellow-500/10" : "text-gray-400 hover:text-yellow-400 hover:bg-gray-700/50"}`}
+                  title="Catch up — AI summary"
+                >
+                  <FiZap size={16} />
+                </button>
+              )}
               <button
-                onClick={() => { setShowSearch((p) => !p); setShowMenu(false); }}
+                onClick={() => { setShowSearch((p) => !p); setShowMenu(false); setShowSummary(false); }}
                 className={`p-1.5 rounded-full transition-colors ${showSearch ? "text-indigo-400 bg-indigo-500/10" : "text-gray-400 hover:text-white hover:bg-gray-700/50"}`}
                 title="Search messages"
               >
@@ -126,6 +138,11 @@ const MessageContainer = () => {
           {/* Search panel */}
           {showSearch && (
             <MessageSearch onClose={() => setShowSearch(false)} />
+          )}
+
+          {/* Catch-up summary panel */}
+          {showSummary && (
+            <ChatSummaryPanel onClose={() => setShowSummary(false)} />
           )}
 
           <Messages />

@@ -88,14 +88,24 @@ const AIChat = () => {
   const [showEmoji, setShowEmoji] = useState(false);
   const { sendToAI, loading, aiMessages } = useAIChat();
   const { authUser } = useAuthContext();
-  const { setAiMessages, selectedAIProvider, setAIProvider, setSelectedConversation } = useConversation();
+  const { setAiMessages, selectedAIProvider, setAIProvider, setSelectedConversation, aiContextMessage, setAiContextMessage } = useConversation();
   const bottomRef = useRef();
+  const inputRef = useRef();
 
   const cfg = PROVIDERS[selectedAIProvider] || PROVIDERS.groq;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [aiMessages, loading]);
+
+  // Pre-populate input when bridged from a chat message
+  useEffect(() => {
+    if (aiContextMessage) {
+      setInput(`About this message: "${aiContextMessage}" — `);
+      setAiContextMessage(null);
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [aiContextMessage, setAiContextMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -287,6 +297,7 @@ const AIChat = () => {
               <BsEmojiSmile size={20} />
             </button>
             <input
+              ref={inputRef}
               type="text"
               className="flex-1 bg-transparent text-sm text-white placeholder-gray-400 outline-none"
               placeholder={`Ask ${cfg.label} anything…`}

@@ -7,13 +7,17 @@ import useReactToMessage from "../../hooks/useReactToMessage";
 import useEditMessage from "../../hooks/useEditMessage";
 import { BsTrash, BsReply, BsCheckAll, BsCheck, BsPencil } from "react-icons/bs";
 import { IoClose, IoCheckmark } from "react-icons/io5";
+import { FiGlobe } from "react-icons/fi";
+import { TbRobot } from "react-icons/tb";
 import UserAvatar from "../common/UserAvatar";
+
+const AI_BOT = { _id: "ai-assistant", fullName: "AI Assistant", isAI: true };
 
 const QUICK_REACTIONS = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
 const Message = ({ message }) => {
   const { authUser } = useAuthContext();
-  const { selectedConversation, setReplyTo } = useConversation();
+  const { selectedConversation, setReplyTo, selectedAIProvider, setAiContextMessage, setSelectedConversation } = useConversation();
   const { deleteMessage } = useDeleteMessage();
   const { reactToMessage } = useReactToMessage();
   const { editMessage } = useEditMessage();
@@ -22,7 +26,37 @@ const Message = ({ message }) => {
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState(message.message);
   const [lightbox, setLightbox] = useState(false);
+  const [translation, setTranslation] = useState(null);
+  const [translating, setTranslating] = useState(false);
   const editInputRef = useRef(null);
+
+  const handleTranslate = async () => {
+    if (translation) { setTranslation(null); return; }
+    setTranslating(true);
+    try {
+      const res = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: `Translate the following to English. Reply with ONLY the translated text, no explanation: "${message.message}"`,
+          conversationHistory: [],
+          provider: selectedAIProvider,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setTranslation(data.reply || "Translation failed.");
+    } catch {
+      setTranslation("Translation failed.");
+    } finally {
+      setTranslating(false);
+    }
+  };
+
+  const handleAskAI = () => {
+    setAiContextMessage(message.message);
+    setSelectedConversation(AI_BOT);
+  };
 
   const fromMe = message.senderId === authUser._id;
   const formattedTime = extractTime(message.createdAt);
@@ -165,6 +199,27 @@ const Message = ({ message }) => {
                 >
                   <BsReply size={16} />
                 </button>
+                {/* Translate (received text messages only) */}
+                {!fromMe && !isImage && (
+                  <button
+                    className={`p-1 transition-colors ${translation ? "text-green-400" : translating ? "text-gray-500 animate-pulse" : "text-gray-300 hover:text-green-400"}`}
+                    onClick={handleTranslate}
+                    title="Translate to English"
+                    disabled={translating}
+                  >
+                    <FiGlobe size={13} />
+                  </button>
+                )}
+                {/* Ask AI About This */}
+                {!isImage && (
+                  <button
+                    className="text-gray-300 hover:text-purple-400 p-1 transition-colors"
+                    onClick={handleAskAI}
+                    title="Ask AI about this"
+                  >
+                    <TbRobot size={14} />
+                  </button>
+                )}
                 {/* Edit (own non-image messages only) */}
                 {fromMe && !isImage && (
                   <button
@@ -210,6 +265,14 @@ const Message = ({ message }) => {
               </div>
             )}
           </div>
+
+          {/* Translation display */}
+          {translation && (
+            <div className="flex items-start gap-1.5 text-xs text-gray-400 italic bg-black/20 rounded-lg px-2.5 py-1.5 max-w-full">
+              <FiGlobe size={11} className="text-green-400 shrink-0 mt-0.5" />
+              <span className="text-gray-300">{translation}</span>
+            </div>
+          )}
 
           {/* Reactions display */}
           {Object.keys(reactionGroups).length > 0 && (

@@ -3,6 +3,7 @@ import useConversation from "../../zustand/useConversation";
 import { useSocketContext } from "../context/SocketContext";
 import { useAuthContext } from "../context/AuthContext";
 import notificationSound from "../assets/sounds/bubble.mp3";
+import useSuggestedReplies from "./useSuggestedReplies";
 
 const useListenMessages = () => {
   const { socket } = useSocketContext();
@@ -13,6 +14,7 @@ const useListenMessages = () => {
     updateConversationMeta, clearUnread,
     updateGroupMeta, clearGroupUnread,
   } = useConversation();
+  const { generateReplies } = useSuggestedReplies();
 
   useEffect(() => {
     // ── Helpers ──────────────────────────────────────────────────────────
@@ -51,6 +53,10 @@ const useListenMessages = () => {
       if (isActiveChat) {
         setMessages([...messages, newMessage]);
         clearUnread(newMessage.senderId);
+        // Trigger smart reply suggestions for text messages
+        if (newMessage.messageType !== "image") {
+          generateReplies(newMessage.message);
+        }
       } else {
         const preview = {
           message: newMessage.messageType === "image" ? "📷 Image" : newMessage.message,
@@ -126,7 +132,7 @@ const useListenMessages = () => {
       socket?.off("messagesRead");
     };
   }, [socket, messages, setMessages, updateMessage, selectedConversation,
-      updateConversationMeta, clearUnread, updateGroupMeta, clearGroupUnread, authUser]);
+      updateConversationMeta, clearUnread, updateGroupMeta, clearGroupUnread, authUser, generateReplies]);
 };
 
 export default useListenMessages;
