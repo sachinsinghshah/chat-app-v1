@@ -6,7 +6,10 @@ const useConversation = create((set, get) => ({
     set({ selectedConversation }),
 
   messages: [],
-  setMessages: (messages) => set({ messages }),
+  setMessages: (updater) =>
+    set((state) => ({
+      messages: typeof updater === "function" ? updater(state.messages) : updater,
+    })),
 
   // Update a single message in the messages list (edit / delete / react)
   updateMessage: (messageId, updates) =>
