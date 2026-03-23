@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useConversation from "../../zustand/useConversation";
 import { useSocketContext } from "../context/SocketContext";
 import { useAuthContext } from "../context/AuthContext";
@@ -9,12 +9,23 @@ const useListenMessages = () => {
   const { socket } = useSocketContext();
   const { authUser } = useAuthContext();
   const {
-    messages, setMessages, updateMessage,
+    setMessages, updateMessage,
     selectedConversation,
     updateConversationMeta, clearUnread,
     updateGroupMeta, clearGroupUnread,
   } = useConversation();
   const { generateReplies } = useSuggestedReplies();
+
+  // Keep refs so socket listeners always read the latest values
+  // without needing them in the dependency array
+  const selectedConvRef = useRef(selectedConversation);
+  useEffect(() => { selectedConvRef.current = selectedConversation; }, [selectedConversation]);
+
+  const authUserRef = useRef(authUser);
+  useEffect(() => { authUserRef.current = authUser; }, [authUser]);
+
+  const generateRepliesRef = useRef(generateReplies);
+  useEffect(() => { generateRepliesRef.current = generateReplies; }, [generateReplies]);
 
   useEffect(() => {
     // ── Helpers ──────────────────────────────────────────────────────────
@@ -27,19 +38,14 @@ const useListenMessages = () => {
       if (Notification.permission === "granted") {
         new Notification(title, { body, icon: "/vite.svg" });
       }
-      // Update tab title
       const match = document.title.match(/^\((\d+)\)\s/);
       const current = match ? parseInt(match[1]) : 0;
       document.title = `(${current + 1}) Chatify`;
     };
 
-    // Reset tab title when window is focused
-    const handleFocus = () => {
-      document.title = "Chatify";
-    };
+    const handleFocus = () => { document.title = "Chatify"; };
     window.addEventListener("focus", handleFocus);
 
-    // Request notification permission once
     if (Notification.permission === "default") {
       Notification.requestPermission();
     }
@@ -49,13 +55,13 @@ const useListenMessages = () => {
       newMessage.shouldShake = true;
       playSound();
 
-      const isActiveChat = selectedConversation?._id === newMessage.senderId;
+      const isActiveChat = selectedConvRef.current?._id === newMessage.senderId;
       if (isActiveChat) {
-        setMessages([...messages, newMessage]);
+        // Functional update — always appends to the latest messages array
+        setMessages((prev) => [...prev, newMessage]);
         clearUnread(newMessage.senderId);
-        // Trigger smart reply suggestions for text messages
         if (newMessage.messageType !== "image") {
-          generateReplies(newMessage.message);
+          generateRepliesRef.current?.(newMessage.message);
         }
       } else {
         const preview = {
@@ -71,12 +77,12 @@ const useListenMessages = () => {
 
     // ── Group new message ─────────────────────────────────────────────────
     socket?.on("newGroupMessage", (newMessage) => {
-      if (newMessage.senderId?._id === authUser?._id) return; // own message
+      if (newMessage.senderId?._id === authUserRef.current?._id) return;
       playSound();
 
-      const isActiveGroup = selectedConversation?._id === newMessage.groupId;
+      const isActiveGroup = selectedConvRef.current?._id === newMessage.groupId;
       if (isActiveGroup) {
-        setMessages([...messages, newMessage]);
+        setMessages((prev) => [...prev, newMessage]);
         clearGroupUnread(newMessage.groupId);
       } else {
         updateGroupMeta(
@@ -118,7 +124,7 @@ const useListenMessages = () => {
 
     // ── Read receipts ─────────────────────────────────────────────────────
     socket?.on("messagesRead", () => {
-      setMessages(messages.map((msg) => ({ ...msg, read: true })));
+      setMessages((prev) => prev.map((msg) => ({ ...msg, read: true })));
     });
 
     return () => {
@@ -131,8 +137,9 @@ const useListenMessages = () => {
       socket?.off("messageEdited");
       socket?.off("messagesRead");
     };
-  }, [socket, messages, setMessages, updateMessage, selectedConversation,
-      updateConversationMeta, clearUnread, updateGroupMeta, clearGroupUnread, authUser, generateReplies]);
+  // Only re-register listeners when the socket itself changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
 };
 
 export default useListenMessages;
