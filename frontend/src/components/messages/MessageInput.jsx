@@ -3,6 +3,7 @@ import { IoSend, IoClose } from "react-icons/io5";
 import { BsEmojiSmile, BsImage } from "react-icons/bs";
 import { BsReply } from "react-icons/bs";
 import useSendMessage from "../../hooks/useSendMessage";
+import useSendGroupMessage from "../../hooks/useSendGroupMessage";
 import useConversation from "../../../zustand/useConversation";
 import { useSocketContext } from "../../context/SocketContext";
 import SuggestedReplies from "./SuggestedReplies";
@@ -45,8 +46,12 @@ const MessageInput = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [imagePreview, setImagePreview] = useState(null); // base64 string
   const [imageLoading, setImageLoading] = useState(false);
-  const { loading, sendMessage } = useSendMessage();
   const { replyTo, setReplyTo, selectedConversation, setSuggestedReplies } = useConversation();
+  const isGroup = selectedConversation?.isGroup;
+  const { loading: dmLoading, sendMessage } = useSendMessage();
+  const { loading: grpLoading, sendGroupMessage } = useSendGroupMessage();
+  const loading = isGroup ? grpLoading : dmLoading;
+  const send = isGroup ? sendGroupMessage : sendMessage;
   const { socket } = useSocketContext();
   const typingTimeoutRef = useRef(null);
   const isTypingRef = useRef(false);
@@ -99,11 +104,11 @@ const MessageInput = () => {
     clearTimeout(typingTimeoutRef.current);
 
     if (imagePreview) {
-      await sendMessage(imagePreview, "image");
+      await send(imagePreview, "image");
       setImagePreview(null);
     }
     if (message.trim()) {
-      await sendMessage(message.trim());
+      await send(message.trim());
       setMessage("");
     }
     setSuggestedReplies([]);

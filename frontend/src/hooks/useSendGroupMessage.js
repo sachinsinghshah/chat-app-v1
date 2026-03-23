@@ -4,7 +4,7 @@ import useConversation from "../../zustand/useConversation";
 
 const useSendGroupMessage = () => {
   const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation, replyTo, setReplyTo } =
+  const { setMessages, selectedConversation, replyTo, setReplyTo } =
     useConversation();
 
   const sendGroupMessage = async (messageText, messageType = "text") => {
@@ -27,7 +27,7 @@ const useSendGroupMessage = () => {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setMessages([...messages, data]);
+      setMessages((prev) => [...prev, data]);
       setReplyTo(null);
     } catch (err) {
       toast.error(err.message);
