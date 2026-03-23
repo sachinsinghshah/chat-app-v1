@@ -18,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const socket = io("https://chatifyv1.8bitcode.in", {
+      const socket = io({
         query: { userId: authUser._id },
       });
 
