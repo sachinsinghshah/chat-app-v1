@@ -14,14 +14,18 @@ const useGetMessages = () => {
     const getMessages = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/messages/${selectedConversation._id}`);
+        const endpoint = selectedConversation.isGroup
+          ? `/api/groups/${selectedConversation._id}/messages`
+          : `/api/messages/${selectedConversation._id}`;
+        const res = await fetch(endpoint);
         const data = await res.json();
         if (data.error) throw new Error(data.error);
         setMessages(data);
 
         // Trigger smart reply suggestions for the last received text message
+        // senderId may be a string (1:1) or populated object (group)
         const lastReceived = [...data].reverse().find(
-          (m) => m.senderId !== authUser?._id && m.messageType !== "image"
+          (m) => (m.senderId?._id || m.senderId) !== authUser?._id && m.messageType !== "image"
         );
         if (lastReceived) generateReplies(lastReceived.message);
       } catch (error) {

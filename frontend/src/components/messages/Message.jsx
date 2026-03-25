@@ -58,10 +58,15 @@ const Message = ({ message }) => {
     setSelectedConversation(AI_BOT);
   };
 
-  const fromMe = message.senderId === authUser._id;
+  const fromMe = message.senderId === authUser._id || message.senderId?._id === authUser._id;
   const formattedTime = extractTime(message.createdAt);
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-  const avatarUser = fromMe ? authUser : selectedConversation;
+  // For group messages the senderId is a populated object — use it as the avatar source
+  const avatarUser = fromMe
+    ? authUser
+    : selectedConversation?.isGroup
+    ? message.senderId
+    : selectedConversation;
 
   const shakeClass = message.shouldShake ? "shake" : "";
   const isDeleted = message.deleted;
