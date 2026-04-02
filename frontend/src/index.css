@@ -70,6 +70,9 @@ button, a, input {
 [data-theme="light"] .bg-gray-800 {
   background: #f1f5f9 !important;
 }
+[data-theme="light"] .bg-gray-800\/80 {
+  background: rgba(248, 250, 252, 0.97) !important;
+}
 [data-theme="light"] .bg-gray-800\/60 {
   background: rgba(248, 250, 252, 0.95) !important;
 }
